@@ -15,11 +15,13 @@ export const MainView = () => {
         .then((data) => {
           const moviesFromApi = data.docs.map((doc) => {
             return {
-              id: movie.id,
+              _id: movie._id,
               Title: movie.Title,
               Description: movie.Description,
               Genre: movie.Genre,
+              ImagePath: movie.ImagePath,
               Director: movie.Director,
+
             };
           });
   
