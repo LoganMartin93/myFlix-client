@@ -8,6 +8,24 @@ export const MainView = () => {
     const [movies, setMovies] = useState([]);
   
     const [selectedMovie, setSelectedMovie] = useState(null);
+
+    useEffect(() => {
+      fetch("https://flix-movie-app-876a7808f8f1.herokuapp.com/movies/")
+        .then((response) => response.json())
+        .then((data) => {
+          const moviesFromApi = data.docs.map((doc) => {
+            return {
+              id: movie.id,
+              Title: movie.Title,
+              Description: movie.Description,
+              Genre: movie.Genre,
+              Director: movie.Director,
+            };
+          });
+  
+          setMovies(moviesFromApi);
+        });
+    }, []);
   
     if (selectedMovie) {
       return (
