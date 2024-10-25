@@ -7,18 +7,25 @@ import { LoginView } from "../login-view/login-view";
 export const MainView = () => {
   const [movies, setMovies] = useState([]); // Initialized as an empty array
   const [selectedMovie, setSelectedMovie] = useState(null);
+  const [user, setUser] = useState(null);
+  const [token, setToken] = useState(null);
 
   useEffect(() => {
-    fetch("https://flix-movie-app-876a7808f8f1.herokuapp.com/movies/")
+    if (!token) {
+      return;
+    }
+
+    fetch("https://flix-movie-app-876a7808f8f1.herokuapp.com/movies/", {
+      headers: { Authorization: `Bearer ${token}` }
+    })
       .then((response) => {
         if (!response.ok) {
-          throw new Error(`HTTP error! status: ${response.status}`);
+          throw new Error("Network response was not ok");
         }
         return response.json();
       })
       .then((data) => {
-        console.log("Data received:", data);
-
+        console.log(data);
         if (Array.isArray(data)) {
           const moviesFromApi = data.map((movie) => ({
             _id: movie._id,
@@ -37,8 +44,9 @@ export const MainView = () => {
       .catch((error) => {
         console.error("Error fetching movies:", error);
       });
-  }, []);
+  }, [token]);
 
+  
   if (!user) {
     return (
       <>
@@ -56,19 +64,46 @@ export const MainView = () => {
 
   if (selectedMovie) {
     return (
+      <>
+      <button
+        onClick={() => {
+          setUser(null);
+        }}
+      >
+        Logout
+        </button>
       <MovieView
         movie={selectedMovie}
         onBackClick={() => setSelectedMovie(null)}
       />
+      </>
     );
   }
 
   if (movies.length === 0) {
-    return <div>The list is empty!</div>;
+    return (
+      <>
+      <button
+        onClick={() => {
+          setUser(null);
+        }}
+      >
+        Logout
+      </button>
+    <div>The list is empty!</div>;
+    </>
+    );
   }
 
   return (
     <div>
+      <button
+        onClick={() => {
+          setUser(null);
+        }}
+      >
+        Logout
+      </button>
       {movies.map((movie) => (
         <MovieCard
           key={movie._id}
