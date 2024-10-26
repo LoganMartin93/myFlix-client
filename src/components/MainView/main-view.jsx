@@ -3,6 +3,9 @@ import { MovieCard } from "../MovieCard/movie-card";
 import { MovieView } from "../MovieView/movie-view";
 import { SignupView } from "../Signup-view/signup-view";
 import { LoginView } from "../login-view/login-view";
+import  Row from "react-bootstrap/Row";
+import  Col from "react-bootstrap/Col";
+
 
 export const MainView = () => {
   const [movies, setMovies] = useState([]); // Initialized as an empty array
@@ -46,73 +49,68 @@ export const MainView = () => {
       });
   }, [token]);
 
-  
-  if (!user) {
-    return (
-      <>
-        <LoginView onLoggedIn={(user, token) => {
-          setUser(user);
-          setToken(token);
-        }} />
-        or
-        <SignupView />
-      </>
-    );
-  }
 
   console.log("Movies state:", movies); // Logging the movies state
 
-  if (selectedMovie) {
-    return (
-      <>
-      <button
-        onClick={() => {
-          setUser(null);
-        }}
-      >
-        Logout
-        </button>
-      <MovieView
-        movie={selectedMovie}
-        onBackClick={() => setSelectedMovie(null)}
-      />
-      </>
-    );
-  }
-
-  if (movies.length === 0) {
-    return (
-      <>
-      <button
-        onClick={() => {
-          setUser(null);
-        }}
-      >
-        Logout
-      </button>
-    <div>The list is empty!</div>;
-    </>
-    );
-  }
 
   return (
-    <div>
-      <button
+    <Row className="justify-content-md-center">
+      {!user ? (
+        <Col md={5}>
+          <LoginView onLoggedIn={(user, token) => {
+          setUser(user);
+          setToken(token);
+        }} />
+          or
+          <SignupView />
+        </Col>
+      ) : selectedMovie ?(
+        <Col md={8} style={{ border: "1px solid black" }}>
+          <button
+            onClick={() => {
+              setUser(null);
+            }}
+          >
+            Logout
+            </button>
+          <MovieView
+            movie={selectedMovie}
+            onBackClick={() => setSelectedMovie(null)}
+          />
+        </Col>
+      ) : movies.length === 0 ? (
+        <>
+          <button
+            onClick={() => {
+              setUser(null);
+            }}
+          >
+            Logout
+          </button>
+        <div>The list is empty!</div>;
+        </>
+      ) : (
+        <>
+        <button
         onClick={() => {
           setUser(null);
         }}
-      >
+        >
         Logout
       </button>
       {movies.map((movie) => (
+        <Col className="mb-5" key={movie.id} md={3}>
         <MovieCard
           key={movie._id}
           movie={movie}
           onMovieClick={(newSelectedMovie) => {
             setSelectedMovie(newSelectedMovie);
           }}
-        />
-      ))}
-    </div>
+          />
+          </Col>
+          ))}
+          </>
+      )}
+    </Row>
   );
 };
