@@ -4,4 +4,12 @@ $color: steelblue;
   color: $color;
 }
 
+.link {
+  text-decoration: none; // Remove underline
+  color: black; // Change text color
+  &:hover {
+    text-decoration: underline; // Optional: underline on hover
+  }
+}
+
 @import "~bootstrap/scss/bootstrap.scss";
