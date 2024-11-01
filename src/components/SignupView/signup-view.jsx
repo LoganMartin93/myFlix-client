@@ -1,15 +1,20 @@
-import{ useState } from "react";
+import { useState } from "react";
+import { useNavigate } from "react-router-dom"; // Import for navigation
 import Button from "react-bootstrap/Button";
 import Form from "react-bootstrap/Form";
+import Alert from "react-bootstrap/Alert"; // Import Alert for error messages
 
 export const SignupView = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [email, setEmail] = useState("");
   const [birthday, setBirthday] = useState("");
+  const [error, setError] = useState(null); // State for error handling
+  const navigate = useNavigate(); // Initialize navigate
 
   const handleSubmit = (event) => {
     event.preventDefault();
+    setError(null); // Clear any previous error
 
     const data = {
       Username: username,
@@ -24,18 +29,26 @@ export const SignupView = () => {
       headers: {
         "Content-Type": "application/json"
       }
-    }).then((response) => {
-      if (response.ok) {
-        alert("Signup successful");
-        window.location.reload();
-      } else {
-        alert("Signup failed");
-      }
-    });
+    })
+      .then((response) => {
+        if (response.ok) {
+          alert("Signup successful");
+          navigate("/login"); // Redirect to login page on success
+        } else {
+          return response.json().then((data) => {
+            throw new Error(data.message || "Signup failed");
+          });
+        }
+      })
+      .catch((error) => {
+        setError(error.message); // Set error message
+      });
   };
 
   return (
     <Form onSubmit={handleSubmit}>
+      {error && <Alert variant="danger">{error}</Alert>} {/* Display error */}
+
       <Form.Group controlId="signUpFormUsername">
         <Form.Label>Username:</Form.Label>
         <Form.Control
@@ -54,8 +67,10 @@ export const SignupView = () => {
           value={password}
           onChange={(e) => setPassword(e.target.value)}
           required
+          minLength="8" // Basic password length validation
         />
       </Form.Group>
+
       <Form.Group controlId="signUpFormEmail">
         <Form.Label>Email:</Form.Label>
         <Form.Control
@@ -65,6 +80,7 @@ export const SignupView = () => {
           required
         />
       </Form.Group>
+
       <Form.Group controlId="signUpFormBirthday">
         <Form.Label>Birthday:</Form.Label>
         <Form.Control
@@ -74,6 +90,7 @@ export const SignupView = () => {
           required
         />
       </Form.Group>
+
       <Button variant="primary" type="submit">
         Submit
       </Button>

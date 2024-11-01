@@ -1,43 +1,42 @@
-import PropTypes from "prop-types";
+import React from "react";
+import { useParams, Link } from "react-router-dom";
+import { Button } from "react-bootstrap";
 
-export const MovieView = ({ movie, onBackClick }) => {
+export const MovieView = ({ movies, isFavorite, onToggleFavorite }) => {
+  const { movieId } = useParams();
+  const movie = movies.find((m) => m._id === movieId);
+
+  if (!movie) {
+    return <div>Movie not found.</div>; // Handle case where movie doesn't exist
+  }
+
   return (
     <div>
+      <Link to={`/`}>
+        <img className="w-50" src={movie.ImagePath} alt={movie.Title} />
+      </Link>
       <div>
-        <img src={movie.ImagePath} alt={movie.Title} style={{ width: '200px' }} />
-      </div>
-      <div>
-        <span><strong>Title:</strong> </span>
+        <span><strong>Title: </strong></span>
         <span>{movie.Title}</span>
       </div>
       <div>
-        <span><strong>Director:</strong> </span>
+        <span><strong>Director: </strong></span>
         <span>{movie.Director.Name}</span>
       </div>
       <div>
-        <span><strong>Description:</strong> </span>
+        <span><strong>Description: </strong></span>
         <span>{movie.Description}</span>
       </div>
       <div>
-        <span><strong>Genre:</strong> </span>
+        <span><strong>Genre: </strong></span>
         <span>{movie.Genre.Name}</span>
       </div>
-      <button onClick={onBackClick}>Back</button>
+      <Button
+        variant={isFavorite(movie._id) ? "danger" : "primary"}
+        onClick={() => onToggleFavorite(movie._id)}
+      >
+        {isFavorite(movie._id) ? "Remove from Favorites" : "Add to Favorites"}
+      </Button>
     </div>
   );
-};
-
-MovieView.propTypes = {
-  movie: PropTypes.shape({
-    Title: PropTypes.string.isRequired,
-    ImagePath: PropTypes.string.isRequired,
-    Director: PropTypes.shape({
-      Name: PropTypes.string.isRequired,
-    }).isRequired,
-    Description: PropTypes.string.isRequired,
-    Genre: PropTypes.shape({
-      Name: PropTypes.string.isRequired,
-    }).isRequired,
-  }).isRequired,
-  onBackClick: PropTypes.func.isRequired,
 };
