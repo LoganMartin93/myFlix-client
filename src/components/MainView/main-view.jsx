@@ -7,7 +7,7 @@ import { NavigationBar } from "../NavigationBar/navigation-bar";
 import { ProfileView } from "../ProfileView/profile-view";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
-import { BrowserRouter, Routes, Route, Navigate, Link } from "react-router-dom";
+import { Routes, Route, Navigate, Link, useSearchParams } from "react-router-dom";
 
 export const MainView = () => {
   const [movies, setMovies] = useState([]);
@@ -15,6 +15,9 @@ export const MainView = () => {
   const [token, setToken] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [searchParams, setSearchParams] = useSearchParams();
+  
+  const searchQuery = searchParams.get("search") || "";
 
   useEffect(() => {
     if (!token) {
@@ -56,6 +59,11 @@ export const MainView = () => {
       });
   }, [token]);
 
+  // Filter movies based on search query
+  const filteredMovies = movies.filter((movie) =>
+    movie.Title.toLowerCase().includes(searchQuery.toLowerCase())
+  );
+
   // Function to toggle favorite status of a movie
   const toggleFavorite = (movieId) => {
     if (user) {
@@ -69,7 +77,7 @@ export const MainView = () => {
         FavoriteMovies: updatedFavorites,
       }));
 
-      // Optionally, update favorites on the server here
+      // Update favorites on the server
       fetch(`https://flix-movie-app-876a7808f8f1.herokuapp.com/users/${user.Username}/favorites`, {
         method: 'PUT',
         headers: {
@@ -82,7 +90,7 @@ export const MainView = () => {
   };
 
   return (
-    <BrowserRouter>
+    <div>
       <NavigationBar
         user={user}
         onLoggedOut={() => {
@@ -96,32 +104,14 @@ export const MainView = () => {
         <Routes>
           <Route
             path="/signup"
-            element={
-              !user ? (
-                <Col md={5}>
-                  <SignupView />
-                </Col>
-              ) : (
-                <Navigate to="/" />
-              )
-            }
+            element={!user ? <Col md={5}><SignupView /></Col> : <Navigate to="/" />}
           />
           <Route
             path="/login"
-            element={
-              user ? (
-                <Navigate to="/" />
-              ) : (
-                <Col md={5}>
-                  <LoginView
-                    onLoggedIn={(user, token) => {
-                      setUser(user);
-                      setToken(token);
-                    }}
-                  />
-                </Col>
-              )
-            }
+            element={user ? <Navigate to="/" /> : <Col md={5}><LoginView onLoggedIn={(user, token) => {
+                setUser(user);
+                setToken(token);
+              }} /></Col>}
           />
           <Route
             path="/movies/:movieId"
@@ -131,7 +121,7 @@ export const MainView = () => {
               ) : movies.length === 0 ? (
                 <Col>The list is empty!</Col>
               ) : (
-                <Col md={8}>
+                <Col md={5} className="text-center">
                   <MovieView
                     movies={movies}
                     isFavorite={(movieId) => user.FavoriteMovies.includes(movieId)}
@@ -150,8 +140,25 @@ export const MainView = () => {
                 <Col>The list is empty!</Col>
               ) : (
                 <>
-                  {movies.map((movie) => (
-                    <Col className="mb-4" key={movie._id} md={3}>
+                  {/* Search Bar: Only show if user is logged in */}
+                  <Col md={12} className="text-center">
+                    <input
+                      type="text"
+                      placeholder="Search for movies..."
+                      value={searchQuery}
+                      onChange={(e) => {
+                        const value = e.target.value;
+                        if (value) {
+                          setSearchParams({ search: value }); // Set search param
+                        } else {
+                          setSearchParams({}); // Clear search param
+                        }
+                      }}
+                      style={{ marginBottom: '20px', padding: '5px', width: '25%' }}
+                    />
+                  </Col>
+                  {filteredMovies.map((movie) => (
+                    <Col className="mb-4" key={movie._id} md={2}>
                       <Link
                         to={`/movies/${encodeURIComponent(movie._id)}`}
                         style={{ textDecoration: "none", color: "black" }}
@@ -194,6 +201,6 @@ export const MainView = () => {
           />
         </Routes>
       </Row>
-    </BrowserRouter>
+    </div>
   );
 };

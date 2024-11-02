@@ -3,15 +3,16 @@ import { MainView } from "./components/MainView/main-view";
 import { Container } from "react-bootstrap";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "./index.scss";
+import { BrowserRouter } from "react-router-dom";
 
 // Main component (will eventually use all the others)
 const MyFlixApplication = () => {
     return (
-      <Container>
-      <div className="my-flix">
-       <MainView/>
-      </div>
-      </Container>
+      <BrowserRouter>
+          <div className="my-flix">
+            <MainView/>
+          </div>
+      </BrowserRouter>
     );
   };
   
