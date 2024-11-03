@@ -4,7 +4,8 @@ import { Link } from "react-router-dom";
 
 export const MovieCard = ({ movie, isFavorite, onToggleFavorite }) => {
   return (
-    <Card>
+    <Card className= "movie-card" style={{ borderColor: 'steel', borderWidth: '4px', borderStyle: 'solid' }}>
+      <div style={{ borderColor: 'White', borderWidth: '4px', borderStyle: 'solid' }}>
       <Card.Img variant="top" src={movie.ImagePath} alt={movie.Title} />
       <Card.Body>
         <Card.Title>{movie.Title}</Card.Title>
@@ -23,6 +24,7 @@ export const MovieCard = ({ movie, isFavorite, onToggleFavorite }) => {
           {isFavorite ? "Remove from Favorites" : "Add to Favorites"}
         </Button>
       </Card.Body>
+      </div>
     </Card>
   );
 };

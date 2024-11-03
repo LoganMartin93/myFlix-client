@@ -11,6 +11,20 @@
   text-decoration: underline;
 }
 
+.movie-card {
+  transition: transform .2s ease-in-out;
+}
+
+.movie-card:hover {
+  z-index: 1;
+  transform: scale(1.05);
+}
+
+body {
+  background-color: #433f3f;
+  margin: 0;
+}
+
 *, :before, :after {
   box-sizing: border-box;
 }
