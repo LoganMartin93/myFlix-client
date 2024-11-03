@@ -11,7 +11,8 @@ export const MovieView = ({ movies, isFavorite, onToggleFavorite }) => {
   }
 
   return (
-    <div>
+    <div style={{ borderColor: 'silver', borderWidth: '4px', borderStyle: 'solid' }}>
+      <div style={{ borderColor: 'White', borderWidth: '4px', borderStyle: 'solid' }}>
       <Link to={`/`}>
         <img className="w-50" src={movie.ImagePath} alt={movie.Title} />
       </Link>
@@ -37,6 +38,7 @@ export const MovieView = ({ movies, isFavorite, onToggleFavorite }) => {
       >
         {isFavorite(movie._id) ? "Remove from Favorites" : "Add to Favorites"}
       </Button>
+      </div>
     </div>
   );
 };

@@ -12,4 +12,19 @@ $color: steelblue;
   }
 }
 
+.movie-card {
+  transition: transform 0.2s ease-in-out; /* Smooth transition */
+}
+
+.movie-card:hover {
+  transform: scale(1.05); /* Increase size by 5% on hover */
+  z-index: 1; /* Optional: Makes sure it appears above other elements */
+}
+
+
+body {
+  background-color: #433f3f; // Change to your preferred color
+  margin: 0; // Optional: remove default body margin
+}
+
 @import "~bootstrap/scss/bootstrap.scss";
