@@ -1,0 +1,13 @@
+{
+  "files": {
+    "main.css": "/myFlix-client/static/css/main.3d839bda.css",
+    "main.js": "/myFlix-client/static/js/main.65ccbf2e.js",
+    "index.html": "/myFlix-client/index.html",
+    "main.3d839bda.css.map": "/myFlix-client/static/css/main.3d839bda.css.map",
+    "main.65ccbf2e.js.map": "/myFlix-client/static/js/main.65ccbf2e.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.3d839bda.css",
+    "static/js/main.65ccbf2e.js"
+  ]
+}
